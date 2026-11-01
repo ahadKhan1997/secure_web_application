@@ -49,3 +49,40 @@
         - Validation Crieria: 
                                 SAST scan with Ruff (ruff check --select S) passes with 0 findings under rule S608 (SQL injection checks).
 
+## 4. Abuse & Misuse Case Scenarios:
+
++-----------------------------------------------------------------------------------+
+|                                 ABUSE CASE MATRIX                                 |
++--------------------------+--------------------------------+-----------------------+
+| Threat Scenario          | Adversary Objective            | Technical Mitigation  |
++--------------------------+--------------------------------+-----------------------+
+| Unauthorized SIM Swap    | Hijack victim's phone line to  | SR-01, SR-04: Admin   |
+| (Account Takeover)       | intercept 2FA SMS codes.       | manual approval flow. |
++--------------------------+--------------------------------+-----------------------+
+| CSRF Profile Update      | Force subscriber to change     | SR-02: Double-Submit  |
+|                          | email via malicious site link. | Anti-CSRF header check|
++--------------------------+--------------------------------+-----------------------+
+| BOLA / IDOR Exploitation | Enumerate swap request IDs     | SR-04: Contextual     |
+|                          | to read other users' data.     | owner validation middleware|
++--------------------------+--------------------------------+-----------------------+
+| XSS Payload Injection    | Inject script in support chat  | SR-03: CSP header     |
+|                          | to steal session cookies.      | & PrimeReact escaping |
++--------------------------+--------------------------------+-----------------------+
+
+    Scenario 1: Malicious SIM Swap Attempt (Account Takeover)
+        Legitimate Use Case: Subscriber lost their physical phone and requests a SIM swap to an eSIM on a new device.
+
+        Abuse Case: An attacker submits a SIM swap request using a stolen subscriber ID to redirect incoming SMS multi-factor authentication (MFA) codes to the attacker's device.
+
+        System Safeguard: SIM swap requests trigger a PENDING_APPROVAL status. High-risk requests require Support Admin verification (SR-04), and audit logs record the requesting IP address and timestamp.
+    
+    Scenario 2: Cross-Site Request Forgery on Profile Updates
+        Legitimate Use Case: Subscriber updates their registered billing address via the React UI settings panel.
+
+        Abuse Case: An attacker tricks an authenticated subscriber into clicking an external link hosted on attacker.com that fires an automated POST /api/v1/user/profile request to alter email settings.
+
+        System Safeguard: FastAPI anti-CSRF middleware rejects the request because the cross-origin browser fetch lacks the custom X-CSRF-Token header generated for the subscriber's session (SR-02).
+
+
+## 5. Security Requirements Traceability Matrix (RTM):
+ 
