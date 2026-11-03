@@ -132,16 +132,14 @@
 
 # 3. Automated CI/CD Pipeline
 
-    ==================================================================================================================================================================
+    =============================================================================================================================
 
 name: Full-Stack SAST Security Audit
-
 on:
   push:
     branches: [ "main", "develop" ]
   pull_request:
     branches: [ "main" ]
-
 jobs:
   backend_sast:
     name: Backend SAST (Ruff)
@@ -149,39 +147,32 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-
       - name: Install Ruff
         run: pip install ruff
-
       - name: Run Backend Security Scan
         run: ruff check --select S app/
-
   frontend_sast:
     name: Frontend SAST (ESLint)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
           cache-dependency-path: "frontend/package-lock.json"
-
       - name: Install Frontend Dependencies
         run: |
           cd frontend
           npm ci
-
       - name: Run Frontend Security Scan
         run: |
           cd frontend
           npx eslint src/ --ext .js,.jsx,.ts,.tsx
-    ==================================================================================================================================================================
+    =============================================================================================================================
