@@ -9,3 +9,14 @@ start backend:
     .\venv\Scripts\Activate.ps1
     uvicorn app.main:app --reload
 
+start frontend:
+    cd frontend
+    npm start
+
+credntials:
+    subscriber:
+        username: subscriber@telecom.com
+        password: UserPassword123!
+    admin:
+        username: admin@telecom.com
+        password: AdminPassword123!
