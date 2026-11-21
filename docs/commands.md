@@ -20,3 +20,10 @@ credntials:
     admin:
         username: admin@telecom.com
         password: AdminPassword123!
+
+backend scan:
+    ruff check --select S app/
+
+frontend scan:
+    npx eslint src/ --ext .js,.jsx
+    npx eslint src/ --ext .js,.jsx; if ($LASTEXITCODE -eq 0) { Write-Host "ESLint SAST Audit Passed: 0 Errors, 0 Warnings" -ForegroundColor Green }

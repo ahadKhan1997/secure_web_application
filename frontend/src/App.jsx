@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import api from './services/api';
 import { Card } from 'primereact/card';
 import { InputText } from 'primereact/inputtext';
@@ -98,6 +98,7 @@ function App() {
   return (
     <div className="p-4 surface-ground min-h-screen">
       <div className="flex justify-content-between align-items-center mb-4">
+      <a href="https://telecom-support.example.com" target="_blank" rel="noreferrer">Support Portal</a>
         <h2>Telecom Dashboard ({role.toUpperCase()})</h2>
         <Button label="Logout" icon="pi pi-power-off" className="p-button-danger" onClick={() => setIsLoggedIn(false)} />
       </div>
