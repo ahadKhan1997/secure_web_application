@@ -21,9 +21,17 @@ credntials:
         username: admin@telecom.com
         password: AdminPassword123!
 
-backend scan:
+backend SAST scan:
     ruff check --select S app/
 
-frontend scan:
+frontend SAST scan:
     npx eslint src/ --ext .js,.jsx
     npx eslint src/ --ext .js,.jsx; if ($LASTEXITCODE -eq 0) { Write-Host "ESLint SAST Audit Passed: 0 Errors, 0 Warnings" -ForegroundColor Green }
+
+backend DAST scan:
+    while server is running:
+    pytest -v tests/test_dast_security.py
+
+frontend DAST scan:
+    while both frontend and backend servers are running
+    node --test tests/dast_frontend.test.mjs
