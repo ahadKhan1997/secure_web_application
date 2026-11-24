@@ -106,12 +106,18 @@ jobs:
           Base.metadata.create_all(bind=engine)
           ph = PasswordHasher()
           db = SessionLocal()
-          for email, pwd, role in [
-              ('subscriber@telecom.com', 'UserPassword123!', UserRole('subscriber')),
-              ('admin@telecom.com', 'AdminPassword123!', UserRole('admin')),
+          for email, pwd, name, phone, role in [
+              ('subscriber@telecom.com', 'UserPassword123!', 'Test Subscriber', '+353871234567', UserRole('subscriber')),
+              ('admin@telecom.com', 'AdminPassword123!', 'Support Admin', '+353870000001', UserRole('admin')),
           ]:
               if not db.query(User).filter(User.email == email).first():
-                  db.add(User(email=email, password_hash=ph.hash(pwd), role=role))
+                  db.add(User(
+                      email=email,
+                      password_hash=ph.hash(pwd),
+                      full_name=name,
+                      phone_number=phone,
+                      role=role,
+                  ))
           db.commit()
           db.close()
           print('CI Database initialized and seeded.')
