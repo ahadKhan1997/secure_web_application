@@ -99,17 +99,19 @@ jobs:
         working-directory: backend
         run: |
           python -c "
+          from argon2 import PasswordHasher
           from app.db.session import engine, SessionLocal
           from app.models.entities import Base, User, UserRole
-          from app.core.security import get_password_hash
+
           Base.metadata.create_all(bind=engine)
+          ph = PasswordHasher()
           db = SessionLocal()
           for email, pwd, role in [
               ('subscriber@telecom.com', 'UserPassword123!', UserRole.subscriber),
               ('admin@telecom.com', 'AdminPassword123!', UserRole.admin),
           ]:
               if not db.query(User).filter(User.email == email).first():
-                  db.add(User(email=email, password_hash=get_password_hash(pwd), role=role))
+                  db.add(User(email=email, password_hash=ph.hash(pwd), role=role))
           db.commit()
           db.close()
           print('CI Database initialized and seeded.')
@@ -126,7 +128,7 @@ jobs:
           FRONTEND_PID=$!
 
           echo "Waiting for FastAPI and React servers to become ready..."
-          npx wait-on http://127.0.0.1:8000/openapi.json http://localhost:3000 -t 60000
+          npx -y wait-on http://127.0.0.1:8000/openapi.json http://localhost:3000 -t 60000
 
           echo "Running Backend Automated DAST..."
           cd ../backend
